@@ -1,0 +1,64 @@
+import ActionButton from "../common/ActionButton";
+
+const ICON_PLACEHOLDER = "https://via.placeholder.com/20";
+
+const ACTIONS = [
+  {
+    text: "Sinh đơn hàng salein",
+    alt: "action",
+    showArrow: true,
+  },
+  {
+    text: "Gắn thẻ",
+    alt: "tag",
+    showArrow: true,
+  },
+  {
+    text: "Cập nhật thông tin",
+    alt: "edit",
+  },
+  {
+    text: "Chọn vào chiến dịch",
+    alt: "campaign",
+  },
+  {
+    text: "Bàn giao công việc",
+    alt: "assign",
+  },
+];
+
+export default function ActionBar() {
+  return (
+    <div className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3">
+
+      <div className="flex flex-wrap items-center gap-3">
+
+        <span className="text-sm font-medium text-gray-700">
+          Đã chọn 1
+        </span>
+
+        <button className="text-sm font-medium text-blue-600 transition hover:text-blue-700 hover:underline">
+          Bỏ chọn
+        </button>
+
+        {ACTIONS.map((item) => (
+          <ActionButton
+            key={item.text}
+            icon={ICON_PLACEHOLDER}
+            text={item.text}
+            alt={item.alt}
+            showArrow={item.showArrow}
+          />
+        ))}
+
+        <ActionButton
+          icon={ICON_PLACEHOLDER}
+          alt="more"
+          iconOnly
+        />
+
+      </div>
+
+    </div>
+  );
+}
