@@ -1,19 +1,13 @@
 export type TaskStatus = 'todo' | 'in_progress' | 'done';
-export type TaskPriority = 'low' | 'medium' | 'high';
 
-export interface User {
-  id: number | string;
-  name: string;
-  role: string;
-  avatarUrl: string | null;
-}
+export type TaskPriority = 'low' | 'medium' | 'high';
 
 export interface Task {
   id: number | string;
   title: string;
   description?: string;
-  status: 'todo' | 'in_progress' | 'done';
-  priority: 'low' | 'medium' | 'high';
+  status: TaskStatus;
+  priority: TaskPriority;
   assigneeId: number | string;
   tags?: string[];
   dueDate?: string | null;
@@ -22,8 +16,8 @@ export interface Task {
 }
 
 export interface GetTasksParams {
-  status?: 'todo' | 'in_progress' | 'done';
-  priority?: 'low' | 'medium' | 'high';
+  status?: TaskStatus;
+  priority?: TaskPriority;
   assigneeId?: number | string;
   q?: string;
   _sort?: string;

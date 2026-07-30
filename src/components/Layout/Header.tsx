@@ -1,5 +1,4 @@
 const ICON_PLACEHOLDER = "https://via.placeholder.com/20";
-const AVATAR_PLACEHOLDER = "https://via.placeholder.com/32";
 
 export default function Header() {
   return (

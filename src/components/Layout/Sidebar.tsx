@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 const ICON_PLACEHOLDER = "https://via.placeholder.com/20";
 
 const SIDEBAR_ITEMS = [
@@ -9,27 +10,25 @@ interface SidebarProps {
   activeTab: string;
   setActiveTab: (tabId: string) => void;
 }
-
 export default function Sidebar({
   activeTab,
   setActiveTab,
 }: SidebarProps) {
+  const navigate = useNavigate();
   return (
     <aside className="flex w-64 flex-col border-r border-gray-200 bg-white">
-
       {/* Menu */}
       <nav className="flex-1 p-4">
-
         <div className="space-y-2">
-
           {SIDEBAR_ITEMS.map((item) => {
-
             const isActive = activeTab === item.id;
-
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  navigate(`/${item.id}`);
+                }}
                 className={`
                   flex
                   w-full
@@ -47,28 +46,22 @@ export default function Sidebar({
                   }
                 `}
               >
-
                 <img
                   src={ICON_PLACEHOLDER}
                   alt={item.label}
                   className="h-5 w-5"
                 />
-
                 <span className="font-medium">
                   {item.label}
                 </span>
-
               </button>
             );
           })}
-
         </div>
-
       </nav>
 
       {/* Footer */}
       <div className="border-t border-gray-200 p-4">
-
         <button
           className="
             flex

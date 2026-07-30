@@ -1,13 +1,14 @@
 import { apiClient } from './apiClient'; // import instance axios
 import type {
-  User,
   Task,
   GetTasksParams,
   PaginatedResponse,
   CreateTaskInput,
   UpdateTaskInput,
 } from '../types/task';
-
+import type {
+  User
+} from '../types/user';
 export const userService = {
   // GET /users
   getUsers: async (): Promise<User[]> => {
