@@ -60,7 +60,6 @@ export default function TaskPage() {
       title: "ID",
       render: (task) => task.id,
     },
-
     {
       key: "title",
       title: "Tên task",
@@ -70,7 +69,6 @@ export default function TaskPage() {
         </span>
       ),
     },
-
     {
       key: "status",
       title: "Trạng thái",
@@ -80,7 +78,6 @@ export default function TaskPage() {
         </span>
       ),
     },
-
     {
       key: "priority",
       title: "Độ ưu tiên",
@@ -90,26 +87,18 @@ export default function TaskPage() {
         </span>
       ),
     },
-
-
-
     {
       key: "assigneeId",
       title: "Người phụ trách",
-
       render: (task) => (
         <span>
           User #{task.assigneeId}
         </span>
       ),
     },
-
-
-
     {
       key: "tags",
       title: "Tag",
-
       render: (task) => (
         <span>
           {
@@ -118,13 +107,9 @@ export default function TaskPage() {
         </span>
       ),
     },
-
-
-
     {
       key: "dueDate",
       title: "Deadline",
-
       render: (task) => (
         <span>
           {
@@ -136,44 +121,27 @@ export default function TaskPage() {
         </span>
       ),
     },
-
-
   ];
-
-
-
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4">
-
-
       <TableToolbar
         onSearch={(value) => {
           setSearch(value);
           setCurrentPage(1);
         }}
       />
-
-
-
       <div className="mt-4">
-
         <DataTable
           data={pageTasks}
           columns={columns}
         />
-
       </div>
-
-
-
       <TablePagination
         total={filteredTasks.length}
         pageSize={pageSize}
         current={currentPage}
         onChange={setCurrentPage}
       />
-
-
     </div>
   );
 }
