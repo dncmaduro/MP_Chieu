@@ -4,26 +4,9 @@ const ICON_PLACEHOLDER = "https://via.placeholder.com/20";
 
 const ACTIONS = [
   {
-    text: "Sinh đơn hàng salein",
-    alt: "action",
+    text: "xóa",
+    alt: "delete",
     showArrow: true,
-  },
-  {
-    text: "Gắn thẻ",
-    alt: "tag",
-    showArrow: true,
-  },
-  {
-    text: "Cập nhật thông tin",
-    alt: "edit",
-  },
-  {
-    text: "Chọn vào chiến dịch",
-    alt: "campaign",
-  },
-  {
-    text: "Bàn giao công việc",
-    alt: "assign",
   },
 ];
 
