@@ -1,10 +1,8 @@
 import { useState } from "react";
-
 interface AvatarProps {
   name: string;
   avatarUrl?: string | null;
 }
-
 export default function Avatar({ name, avatarUrl }: AvatarProps) {
   const [hasError, setHasError] = useState(false);
 

@@ -1,16 +1,15 @@
-import { apiClient } from './apiClient'; // import instance axios
+import { apiClient } from './apiClient';
 import type {
   Task,
   GetTasksParams,
   PaginatedResponse,
   CreateTaskInput,
   UpdateTaskInput,
+  TaskWithUser,
 } from '../types/task';
-import type {
-  User
-} from '../types/user';
+import type { User } from '../types/user';
+
 export const userService = {
-  // GET /users
   getUsers: async (): Promise<User[]> => {
     const response = await apiClient.get<User[]>('/users');
     return response.data;
@@ -18,24 +17,73 @@ export const userService = {
 };
 
 export const taskService = {
-  // GET /get all tasks 
-  getTasks: async (
-    params?: GetTasksParams
-  ): Promise<Task[] | PaginatedResponse<Task>> => {
-    const response = await apiClient.get<Task[] | PaginatedResponse<Task>>(
-      '/tasks',
-      { params }
-    );
+  getTasks: async (params?: GetTasksParams): Promise<Task[] | PaginatedResponse<Task>> => {
+    const queryParams: Record<string, unknown> = {};
+
+    if (params?.status) {
+      queryParams['status:eq'] = params.status;
+    }
+
+    if (params?.priority) {
+      queryParams['priority:eq'] = params.priority;
+    }
+
+    if (params?.userId) {
+      queryParams['userId:eq'] = params.userId;
+    }
+
+    if (params?.title) {
+      queryParams['title:contains'] = params.title;
+    }
+
+    if (params?._sort) {
+      queryParams._sort = params._sort;
+    }
+
+    if (params?._page) {
+      queryParams._page = params._page;
+    }
+
+    if (params?._per_page) {
+      queryParams._per_page = params._per_page;
+    }
+
+    const response = await apiClient.get<Task[] | PaginatedResponse<Task>>('/tasks', {
+      params: queryParams,
+    });
+
     return response.data;
   },
 
-  // GET /get task by id
   getTaskById: async (id: number | string): Promise<Task> => {
     const response = await apiClient.get<Task>(`/tasks/${id}`);
     return response.data;
   },
 
-  // POST /create tasks
+  getTasksWithUser: async (
+    params?: GetTasksParams
+  ): Promise<TaskWithUser[] | PaginatedResponse<TaskWithUser>> => {
+    const [tasks, users] = await Promise.all([
+      taskService.getTasks(params),
+      userService.getUsers(),
+    ]);
+
+    if (Array.isArray(tasks)) {
+      return tasks.map((task) => ({
+        ...task,
+        user: users.find((user) => String(user.id) === String(task.userId)),
+      }));
+    }
+
+    return {
+      ...tasks,
+      data: tasks.data.map((task) => ({
+        ...task,
+        user: users.find((user) => String(user.id) === String(task.userId)),
+      })),
+    };
+  },
+
   createTask: async (data: CreateTaskInput): Promise<Task> => {
     const now = new Date().toISOString();
     const payload: Omit<Task, 'id'> = {
@@ -47,11 +95,7 @@ export const taskService = {
     return response.data;
   },
 
-  // PATCH /update tasks by id
-  updateTask: async (
-    id: number | string,
-    data: UpdateTaskInput
-  ): Promise<Task> => {
+  updateTask: async (id: number | string, data: UpdateTaskInput): Promise<Task> => {
     const payload = {
       ...data,
       updatedAt: new Date().toISOString(),
@@ -60,7 +104,6 @@ export const taskService = {
     return response.data;
   },
 
-  // DELETE /delete task by id
   deleteTask: async (id: number | string): Promise<Record<string, never>> => {
     const response = await apiClient.delete<Record<string, never>>(`/tasks/${id}`);
     return response.data;
