@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 
 import sortUpIcon from "../../assets/icons/sort_up.png";
 import sortDownIcon from "../../assets/icons/sort_down.png";
+import TableLoading from "./TableLoading";
+import TableEmpty from "./TableEmpty";
+import TableError from "./TableError";
 
 export interface Column<T> {
   title: string;
@@ -18,6 +21,9 @@ interface DataTableProps<T extends { id: number | string }> {
   data: T[];
   columns: Column<T>[];
 
+  isLoading?: boolean;
+  isError?: boolean;
+
   sortKey?: string;
   sortDirection?: SortDirection;
 
@@ -32,6 +38,8 @@ export default function DataTable<
 >({
   data,
   columns,
+  isLoading = false,
+  isError = false,
   sortKey,
   sortDirection,
   onSort,
@@ -162,9 +170,14 @@ export default function DataTable<
 
   const totalWidth = 48 + columns.reduce((sum, column) => sum + (columnWidths[column.key] ?? column.width ?? defaultColumnWidth), 0);
 
+  // +1 for checkbox column
+  const totalColSpan = columns.length + 1;
+
   return (
-    <div className="w-full max-w-full overflow-hidden rounded-lg border border-gray-200 bg-white">
-      <div className="max-w-full overflow-x-auto">
+    <div className="relative w-full max-w-full overflow-hidden rounded-lg border border-gray-200 bg-white">
+      {/* Loading overlay — rendered on top of the entire table */}
+      {isLoading && <TableLoading />}
+      <div className="table-scroll max-w-full overflow-x-auto">
         <table className="table-fixed border-collapse text-sm" style={{ minWidth: `${totalWidth}px`, width: "100%" }}>
           <thead className="bg-gray-50 text-left text-gray-700">
             <tr className="h-11 border-b">
@@ -247,34 +260,55 @@ export default function DataTable<
         </thead>
 
         <tbody>
-          {sortedData.map((row) => {
-            const selected = currentSelectedRows.includes(row.id);
+          {/* Error state */}
+          {isError && !isLoading && (
+            <TableError colSpan={totalColSpan} />
+          )}
 
-            return (
-              <tr
-                key={row.id}
-                className={`h-12 border-b transition-colors ${selected ? "bg-blue-50" : "hover:bg-gray-100"}`}
-              >
-                <td className="border-r px-2 text-center">
-                  <input
-                    type="checkbox"
-                    checked={selected}
-                    onChange={() => toggleRow(row.id)}
-                  />
-                </td>
+          {/* Empty state — only show when not loading and not error */}
+          {!isError && !isLoading && sortedData.length === 0 && (
+            <TableEmpty colSpan={totalColSpan} />
+          )}
 
-                {columns.map((column) => {
-                  const width = columnWidths[column.key] ?? column.width ?? defaultColumnWidth;
+          {/* Data rows — show even while loading so layout doesn't jump,
+              but they are hidden behind the overlay */}
+          {!isError &&
+            sortedData.map((row) => {
+              const selected = currentSelectedRows.includes(row.id);
 
-                  return (
-                    <td key={column.key} className="px-4 py-3 align-middle" style={{ width, maxWidth: width }}>
-                      <div className="overflow-hidden text-ellipsis whitespace-nowrap">{column.render(row)}</div>
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+              return (
+                <tr
+                  key={row.id}
+                  className={`h-12 border-b border-gray-200 transition-colors ${
+                    selected ? "bg-blue-50" : "hover:bg-gray-100"
+                  }`}
+                >
+                  <td className="border-r border-gray-200 px-2 text-center">
+                    <input
+                      type="checkbox"
+                      checked={selected}
+                      onChange={() => toggleRow(row.id)}
+                    />
+                  </td>
+
+                  {columns.map((column) => {
+                    const width = columnWidths[column.key] ?? column.width ?? defaultColumnWidth;
+
+                    return (
+                      <td
+                        key={column.key}
+                        className="px-4 py-3 align-middle"
+                        style={{ width, maxWidth: width }}
+                      >
+                        <div className="overflow-hidden text-ellipsis whitespace-nowrap">
+                          {column.render(row)}
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
         </tbody>
         </table>
       </div>

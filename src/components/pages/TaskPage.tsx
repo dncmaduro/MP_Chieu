@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 
 import { useTasks } from "../../hooks/useTasks";
 import Avatar from "../common/Avatar";
@@ -74,9 +74,11 @@ const TASK_FILTERS = [
 ];
 
 export default function TaskPage() {
-  const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const search = searchParams.get("keyword") || "";
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("pageSize")) || 10;
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [selectedRows, setSelectedRows] = useState<(number | string)[]>([]);
@@ -107,37 +109,38 @@ export default function TaskPage() {
     updatedTo: "",
   });
 
-  const [appliedFilterValues, setAppliedFilterValues] = useState<Record<string, string>>({
-    title: "",
-    user: "",
-    status: "",
-    priority: "",
-    dueFrom: "",
-    dueTo: "",
-    createdFrom: "",
-    createdTo: "",
-    updatedFrom: "",
-    updatedTo: "",
-  });
+  // Sync draft filters with URL (applied filters) when searchParams changes
+  useEffect(() => {
+    setDraftFilterValues({
+      title: searchParams.get("title") || "",
+      user: searchParams.get("assignee") || "",
+      status: searchParams.get("status") || "",
+      priority: searchParams.get("priority") || "",
+      dueFrom: searchParams.get("dueFrom") || "",
+      dueTo: searchParams.get("dueTo") || "",
+      createdFrom: searchParams.get("createdFrom") || "",
+      createdTo: searchParams.get("createdTo") || "",
+      updatedFrom: searchParams.get("updatedFrom") || "",
+      updatedTo: searchParams.get("updatedTo") || "",
+    });
+  }, [searchParams]);
+
+  const appliedFilterValues = {
+    title: searchParams.get("title") || "",
+    user: searchParams.get("assignee") || "",
+    status: searchParams.get("status") || "",
+    priority: searchParams.get("priority") || "",
+    dueFrom: searchParams.get("dueFrom") || "",
+    dueTo: searchParams.get("dueTo") || "",
+    createdFrom: searchParams.get("createdFrom") || "",
+    createdTo: searchParams.get("createdTo") || "",
+    updatedFrom: searchParams.get("updatedFrom") || "",
+    updatedTo: searchParams.get("updatedTo") || "",
+  };
 
   const { data, isLoading, isError } = useTasks();
   const tasks = Array.isArray(data) ? data : data?.data ?? [];
 
-  if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center rounded-lg border bg-white text-gray-500">
-        Đang tải danh sách task...
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex h-64 items-center justify-center rounded-lg border bg-white text-red-500">
-        Không thể tải danh sách task.
-      </div>
-    );
-  }
 
   const handleFilterChange = (key: string, value: string) => {
     setDraftFilterValues((prev) => ({
@@ -147,8 +150,19 @@ export default function TaskPage() {
   };
 
   const handleApplyFilter = () => {
-    setAppliedFilterValues(draftFilterValues);
-    setCurrentPage(1);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      Object.entries(draftFilterValues).forEach(([key, val]) => {
+        const paramKey = key === "user" ? "assignee" : key;
+        if (val) {
+          next.set(paramKey, val);
+        } else {
+          next.delete(paramKey);
+        }
+      });
+      next.set("page", "1");
+      return next;
+    });
   };
 
   const handleResetFilter = () => {
@@ -165,8 +179,15 @@ export default function TaskPage() {
       updatedTo: "",
     };
     setDraftFilterValues(emptyValues);
-    setAppliedFilterValues(emptyValues);
-    setCurrentPage(1);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      Object.keys(emptyValues).forEach((key) => {
+        const paramKey = key === "user" ? "assignee" : key;
+        next.delete(paramKey);
+      });
+      next.set("page", "1");
+      return next;
+    });
   };
 
   const matchDateRange = (taskDateStr: string | null | undefined, fromStr: string, toStr: string) => {
@@ -319,9 +340,18 @@ export default function TaskPage() {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4">
       <TableHeader
+        searchValue={search}
         onSearch={(value) => {
-          setSearch(value);
-          setCurrentPage(1);
+          setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            if (value) {
+              next.set("keyword", value);
+            } else {
+              next.delete("keyword");
+            }
+            next.set("page", "1");
+            return next;
+          });
         }}
         onToggleFilter={() => {
           setIsFilterOpen((prev) => !prev);
@@ -333,6 +363,8 @@ export default function TaskPage() {
             <DataTable
               data={pageTasks}
               columns={columns}
+              isLoading={isLoading}
+              isError={isError}
               selectedRows={selectedRows}
               onSelectionChange={setSelectedRows}
             />
@@ -341,7 +373,13 @@ export default function TaskPage() {
             total={filteredTasks.length}
             pageSize={pageSize}
             current={currentPage}
-            onChange={setCurrentPage}
+            onChange={(newPage) => {
+              setSearchParams((prev) => {
+                const next = new URLSearchParams(prev);
+                next.set("page", String(newPage));
+                return next;
+              });
+            }}
           />
         </div>
         {/* 5. Truyền danh sách filters và state thực tế vào FilterSidebar */}

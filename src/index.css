@@ -1,1 +1,34 @@
 @import "tailwindcss";
+/* Scrollbar */
+
+.table-scroll {
+  scrollbar-width: thin;                 /* Firefox */
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color .2s;
+}
+
+.table-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0);
+  border-radius: 999px;
+  transition: background .2s;
+}
+
+.table-scroll:hover {
+  scrollbar-color: rgba(120,120,120,.5) transparent;
+}
+
+.table-scroll:hover::-webkit-scrollbar-thumb {
+  background: rgba(120,120,120,.45);
+}
+
+.table-scroll:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(90,90,90,.7);
+}

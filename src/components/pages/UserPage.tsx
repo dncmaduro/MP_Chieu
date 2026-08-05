@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import type { User } from "../../types/user";
 import { useUsers } from "../../hooks/useUsers";
 import TableToolbar from "../common/TableHeader";
@@ -40,8 +40,11 @@ export default function UserPage() {
     isError,
   } = useUsers();
 
-  const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const search = searchParams.get("keyword") || "";
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("pageSize")) || 10;
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [selectedRows, setSelectedRows] = useState<(number | string)[]>([]);
@@ -65,31 +68,20 @@ export default function UserPage() {
     id: "",
   });
 
-  const [appliedFilterValues, setAppliedFilterValues] = useState<Record<string, string>>({
-    name: "",
-    role: "",
-    id: "",
-  });
+  // Sync draft filters with URL when searchParams changes (reload / direct URL)
+  useEffect(() => {
+    setDraftFilterValues({
+      name: searchParams.get("name") || "",
+      role: searchParams.get("role") || "",
+      id: searchParams.get("id") || "",
+    });
+  }, [searchParams]);
 
-  const pageSize = 10;
-
-  // Loading
-  if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center rounded-lg border bg-white text-gray-500">
-        Đang tải danh sách người dùng...
-      </div>
-    );
-  }
-
-  // Error
-  if (isError) {
-    return (
-      <div className="flex h-64 items-center justify-center rounded-lg border bg-white text-red-500">
-        Không thể tải danh sách người dùng.
-      </div>
-    );
-  }
+  const appliedFilterValues = {
+    name: searchParams.get("name") || "",
+    role: searchParams.get("role") || "",
+    id: searchParams.get("id") || "",
+  };
 
   const handleFilterChange = (key: string, value: string) => {
     setDraftFilterValues((prev) => ({
@@ -99,27 +91,37 @@ export default function UserPage() {
   };
 
   const handleApplyFilter = () => {
-    setAppliedFilterValues(draftFilterValues);
-    setCurrentPage(1);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      Object.entries(draftFilterValues).forEach(([key, val]) => {
+        if (val) {
+          next.set(key, val);
+        } else {
+          next.delete(key);
+        }
+      });
+      next.set("page", "1");
+      return next;
+    });
   };
 
   const handleResetFilter = () => {
-    const emptyValues = {
-      name: "",
-      role: "",
-      id: "",
-    };
+    const emptyValues = { name: "", role: "", id: "" };
     setDraftFilterValues(emptyValues);
-    setAppliedFilterValues(emptyValues);
-    setCurrentPage(1);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      Object.keys(emptyValues).forEach((key) => next.delete(key));
+      next.set("page", "1");
+      return next;
+    });
   };
 
   const filteredUsers = users.filter((user) => {
-    const keyword = search.toLowerCase();
+    const kw = search.toLowerCase();
     const matchesSearch =
-      user.name.toLowerCase().includes(keyword) ||
-      user.role.toLowerCase().includes(keyword) ||
-      user.id.toString().includes(keyword);
+      user.name.toLowerCase().includes(kw) ||
+      user.role.toLowerCase().includes(kw) ||
+      user.id.toString().includes(kw);
 
     const matchesName = appliedFilterValues.name
       ? user.name.toLowerCase().includes(appliedFilterValues.name.toLowerCase())
@@ -137,10 +139,7 @@ export default function UserPage() {
   });
 
   const start = (currentPage - 1) * pageSize;
-  const pageUsers = filteredUsers.slice(
-    start,
-    start + pageSize
-  );
+  const pageUsers = filteredUsers.slice(start, start + pageSize);
 
   const columns: Column<User>[] = [
     {
@@ -150,13 +149,8 @@ export default function UserPage() {
       sortValue: (user) => user.name,
       render: (user) => (
         <div className="flex items-center gap-3">
-          <Avatar
-            name={user.name}
-            avatarUrl={user.avatarUrl}
-          />
-          <span className="font-medium">
-            {user.name}
-          </span>
+          <Avatar name={user.name} avatarUrl={user.avatarUrl} />
+          <span className="font-medium">{user.name}</span>
         </div>
       ),
     },
@@ -179,9 +173,18 @@ export default function UserPage() {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4">
       <TableToolbar
+        searchValue={search}
         onSearch={(value) => {
-          setSearch(value);
-          setCurrentPage(1);
+          setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            if (value) {
+              next.set("keyword", value);
+            } else {
+              next.delete("keyword");
+            }
+            next.set("page", "1");
+            return next;
+          });
         }}
         onToggleFilter={() => {
           setIsFilterOpen((prev) => !prev);
@@ -193,6 +196,8 @@ export default function UserPage() {
             <DataTable
               data={pageUsers}
               columns={columns}
+              isLoading={isLoading}
+              isError={isError}
               selectedRows={selectedRows}
               onSelectionChange={setSelectedRows}
             />
@@ -201,7 +206,13 @@ export default function UserPage() {
             total={filteredUsers.length}
             pageSize={pageSize}
             current={currentPage}
-            onChange={setCurrentPage}
+            onChange={(newPage) => {
+              setSearchParams((prev) => {
+                const next = new URLSearchParams(prev);
+                next.set("page", String(newPage));
+                return next;
+              });
+            }}
           />
         </div>
         {isFilterOpen && (
