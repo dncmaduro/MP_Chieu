@@ -1,3 +1,5 @@
+import type { User } from "./user";
+
 export type TaskStatus = 'todo' | 'in_progress' | 'done';
 
 export type TaskPriority = 'low' | 'medium' | 'high';
@@ -8,19 +10,24 @@ export interface Task {
   description?: string;
   status: TaskStatus;
   priority: TaskPriority;
-  assigneeId: number | string;
+  userId: number | string;
   tags?: string[];
   dueDate?: string | null;
   createdAt: string;
   updatedAt: string;
 }
-
+export interface TaskWithUser extends Task {
+  user?: User;
+}
 export interface GetTasksParams {
   status?: TaskStatus;
   priority?: TaskPriority;
-  assigneeId?: number | string;
-  q?: string;
+  userId?: number | string;
+
+  title?: string;
+
   _sort?: string;
+
   _page?: number;
   _per_page?: number;
 }

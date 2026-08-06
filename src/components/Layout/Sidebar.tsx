@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import UserIcon from "../../assets/svg/ic_user";
+import TaskIcon from "../../assets/svg/uc_task";
 const ICON_PLACEHOLDER = "https://via.placeholder.com/20";
 
 const SIDEBAR_ITEMS = [
@@ -46,11 +48,11 @@ export default function Sidebar({
                   }
                 `}
               >
-                <img
-                  src={ICON_PLACEHOLDER}
-                  alt={item.label}
-                  className="h-5 w-5"
-                />
+                {item.id === "user" ? (
+                  <UserIcon className="h-5 w-5" />
+                ) : (
+                  <TaskIcon className="h-5 w-5" />
+                )}
                 <span className="font-medium">
                   {item.label}
                 </span>

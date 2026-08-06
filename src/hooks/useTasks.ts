@@ -8,24 +8,28 @@ import type {
   UpdateTaskInput,
 } from "../types/task";
 
-// GET ALL TASKS
 export function useTasks(params?: GetTasksParams) {
   return useQuery({
     queryKey: ["tasks", params],
-    queryFn: () => taskService.getTasks(params),
+    queryFn: () => taskService.getTasksWithUser(params),
+    placeholderData: (previousData) => previousData,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
   });
 }
+
 
 // GET TASK DETAIL
 export function useTask(id: number | string) {
   return useQuery({
     queryKey: ["tasks", id],
-    queryFn: () => taskService.getTaskById(id),
+    queryFn: () =>
+      taskService.getTaskById(id),
     enabled: !!id,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -67,6 +71,7 @@ export function useUpdateTask() {
       });
 
     },
+
   });
 }
 
@@ -80,6 +85,8 @@ export function useDeleteTask() {
       queryClient.invalidateQueries({
         queryKey: ["tasks"],
       });
+
     },
+
   });
 }

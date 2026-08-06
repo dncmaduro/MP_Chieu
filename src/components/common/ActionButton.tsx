@@ -6,7 +6,6 @@ interface ActionButtonProps {
   iconOnly?: boolean;
   onClick?: () => void;
 }
-
 export default function ActionButton({
   icon,
   text,
@@ -29,7 +28,6 @@ export default function ActionButton({
       </button>
     );
   }
-
   return (
     <button
       onClick={onClick}
@@ -40,9 +38,7 @@ export default function ActionButton({
         alt={alt}
         className="h-5 w-5"
       />
-
       <span>{text}</span>
-
       {showArrow && (
         <img
           src={icon}

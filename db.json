@@ -38,7 +38,7 @@
       "description": "Thiết kế giao diện và luồng lọc task theo trạng thái, độ ưu tiên và người phụ trách.",
       "status": "done",
       "priority": "high",
-      "assigneeId": 3,
+      "userId": 3,
       "tags": [
         "ui",
         "filter",
@@ -54,7 +54,7 @@
       "description": "Implement filtering by status, priority, assignee and combine multiple filter conditions.",
       "status": "in_progress",
       "priority": "high",
-      "assigneeId": 1,
+      "userId": 1,
       "tags": [
         "react",
         "query",
@@ -70,7 +70,7 @@
       "description": "Chuẩn hóa endpoint và query parameters phục vụ trang quản lý task.",
       "status": "done",
       "priority": "high",
-      "assigneeId": 2,
+      "userId": 2,
       "tags": [
         "api",
         "backend"
@@ -85,7 +85,7 @@
       "description": "Kiểm tra validation, dữ liệu bắt buộc và các trường hợp request không hợp lệ khi tạo task.",
       "status": "in_progress",
       "priority": "medium",
-      "assigneeId": 4,
+      "userId": 4,
       "tags": [
         "qa",
         "api",
@@ -101,7 +101,7 @@
       "description": "Review toàn bộ luồng tạo, cập nhật, xóa và thay đổi trạng thái task trước khi demo.",
       "status": "todo",
       "priority": "medium",
-      "assigneeId": 5,
+      "userId": 5,
       "tags": [
         "review",
         "planning"
@@ -116,7 +116,7 @@
       "description": "Xây dựng component hiển thị title, status, priority, assignee và deadline của task.",
       "status": "done",
       "priority": "medium",
-      "assigneeId": 1,
+      "userId": 1,
       "tags": [
         "react",
         "component",
@@ -132,7 +132,7 @@
       "description": "Đảm bảo bảng và form quản lý task sử dụng tốt trên laptop, tablet và màn hình nhỏ.",
       "status": "todo",
       "priority": "low",
-      "assigneeId": 3,
+      "userId": 3,
       "tags": [
         "responsive",
         "css",
@@ -148,7 +148,7 @@
       "description": "Hỗ trợ PATCH để cập nhật từng trường của task và đảm bảo updatedAt được thay đổi.",
       "status": "done",
       "priority": "high",
-      "assigneeId": 2,
+      "userId": 2,
       "tags": [
         "api",
         "patch",
@@ -164,7 +164,7 @@
       "description": "Kiểm tra các chuyển đổi todo, in_progress và done từ giao diện và API.",
       "status": "in_progress",
       "priority": "medium",
-      "assigneeId": 4,
+      "userId": 4,
       "tags": [
         "qa",
         "status",
@@ -180,7 +180,7 @@
       "description": "Chuẩn bị dữ liệu người dùng và task đủ đa dạng để kiểm tra các trạng thái và bộ lọc.",
       "status": "done",
       "priority": "low",
-      "assigneeId": 5,
+      "userId": 5,
       "tags": [
         "demo",
         "data"
@@ -195,7 +195,7 @@
       "description": "Liên kết assigneeId với users để hiển thị tên và avatar của người được giao task.",
       "status": "in_progress",
       "priority": "medium",
-      "assigneeId": 1,
+      "userId": 1,
       "tags": [
         "react",
         "user",
@@ -211,7 +211,7 @@
       "description": "Thiết kế form gồm tiêu đề, mô tả, trạng thái, độ ưu tiên, người phụ trách, tag và deadline.",
       "status": "done",
       "priority": "high",
-      "assigneeId": 3,
+      "userId": 3,
       "tags": [
         "ui",
         "form",
@@ -227,7 +227,7 @@
       "description": "Bổ sung kiểm tra title, tags, deadline và các trường bắt buộc trước khi gửi request.",
       "status": "in_progress",
       "priority": "high",
-      "assigneeId": 1,
+      "userId": 1,
       "tags": [
         "react",
         "validation",
@@ -243,7 +243,7 @@
       "description": "Viết test case cho hiển thị danh sách, lọc, phân trang và các trạng thái loading hoặc lỗi.",
       "status": "todo",
       "priority": "medium",
-      "assigneeId": 4,
+      "userId": 4,
       "tags": [
         "qa",
         "test-case"
@@ -258,7 +258,7 @@
       "description": "Kiểm tra cách lọc task theo assigneeId và chuẩn hóa query để frontend dễ sử dụng.",
       "status": "todo",
       "priority": "low",
-      "assigneeId": 2,
+      "userId": 2,
       "tags": [
         "api",
         "query",
@@ -274,7 +274,7 @@
       "description": "Hiển thị skeleton hoặc loading indicator trong lúc React Query đang lấy dữ liệu.",
       "status": "done",
       "priority": "medium",
-      "assigneeId": 1,
+      "userId": 1,
       "tags": [
         "react",
         "query",
@@ -290,7 +290,7 @@
       "description": "Thiết kế trạng thái lỗi và nút thử lại khi request lấy task thất bại.",
       "status": "in_progress",
       "priority": "high",
-      "assigneeId": 1,
+      "userId": 1,
       "tags": [
         "react",
         "error",
@@ -306,7 +306,7 @@
       "description": "Đánh giá cách sử dụng filter, nút reset và cách hiển thị các điều kiện lọc đang áp dụng.",
       "status": "todo",
       "priority": "medium",
-      "assigneeId": 3,
+      "userId": 3,
       "tags": [
         "ux",
         "filter",
@@ -322,7 +322,7 @@
       "description": "Xác minh người dùng chỉ có thể thực hiện các thao tác phù hợp với vai trò được cấp.",
       "status": "todo",
       "priority": "high",
-      "assigneeId": 4,
+      "userId": 4,
       "tags": [
         "qa",
         "permission",
@@ -338,7 +338,7 @@
       "description": "Tổng hợp các luồng chính và chuẩn bị dữ liệu để demo tính năng CRUD task cho team.",
       "status": "todo",
       "priority": "high",
-      "assigneeId": 5,
+      "userId": 5,
       "tags": [
         "demo",
         "crud",
