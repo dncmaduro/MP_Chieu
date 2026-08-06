@@ -1,3 +1,6 @@
+import SearchIcon from "../../assets/svg/ic_search";
+import UserIcon from "../../assets/svg/ic_user";
+import TaskIcon from "../../assets/svg/uc_task";
 const ICON_PLACEHOLDER = "https://via.placeholder.com/20";
 
 export default function Header() {
@@ -13,11 +16,7 @@ export default function Header() {
       </div>
       {/* Search */}
       <div className="mx-8 flex h-9 max-w-2xl flex-1 items-center rounded-full border border-gray-300 bg-gray-50 px-4">
-        <img
-          src="/assets/ic_Search.png"
-          alt="Search"
-          className="mr-3 h-4 w-4"
-        />
+        <SearchIcon className="h-6 w-6" />
         <input
           type="text"
           placeholder="Tìm kiếm người dùng, công việc"
@@ -26,14 +25,9 @@ export default function Header() {
       </div>
       {/* Right */}
       <div className="flex items-center gap-2">
-        {/* Notification */}
         <button className="relative flex h-10 w-10 items-center justify-center rounded-lg transition hover:bg-gray-100">
 
-          <img
-            src={ICON_PLACEHOLDER}
-            alt="bell"
-            className="h-5 w-5"
-          />
+          <UserIcon className="h-5 w-5" />
           <span
             className="
               absolute

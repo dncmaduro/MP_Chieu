@@ -5,6 +5,7 @@ import sortDownIcon from "../../assets/icons/sort_down.png";
 import TableLoading from "./TableLoading";
 import TableEmpty from "./TableEmpty";
 import TableError from "./TableError";
+import { normalize } from "../../utils";
 
 export interface Column<T> {
   title: string;
@@ -143,14 +144,6 @@ export default function DataTable<
     const sortedRows = [...data].sort((a, b) => {
       const leftValue = column.sortValue ? column.sortValue(a) : (a as Record<string, unknown>)[column.key];
       const rightValue = column.sortValue ? column.sortValue(b) : (b as Record<string, unknown>)[column.key];
-
-      const normalize = (value: unknown) => {
-        if (value === null || value === undefined || value === "") return "";
-        if (typeof value === "number") return value;
-        if (value instanceof Date) return value.getTime();
-        return String(value).toLowerCase();
-      };
-
       const left = normalize(leftValue);
       const right = normalize(rightValue);
 
@@ -170,7 +163,7 @@ export default function DataTable<
 
   const totalWidth = 48 + columns.reduce((sum, column) => sum + (columnWidths[column.key] ?? column.width ?? defaultColumnWidth), 0);
 
-  // +1 for checkbox column
+  // +1 checkbox column
   const totalColSpan = columns.length + 1;
 
   return (
@@ -260,22 +253,19 @@ export default function DataTable<
         </thead>
 
         <tbody>
-          {/* Error state */}
+          {/* Error */}
           {isError && !isLoading && (
             <TableError colSpan={totalColSpan} />
           )}
 
-          {/* Empty state — only show when not loading and not error */}
+          {/* Empty*/}
           {!isError && !isLoading && sortedData.length === 0 && (
             <TableEmpty colSpan={totalColSpan} />
           )}
 
-          {/* Data rows — show even while loading so layout doesn't jump,
-              but they are hidden behind the overlay */}
           {!isError &&
             sortedData.map((row) => {
               const selected = currentSelectedRows.includes(row.id);
-
               return (
                 <tr
                   key={row.id}
