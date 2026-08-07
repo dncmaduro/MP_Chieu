@@ -32,6 +32,7 @@ interface DataTableProps<T extends { id: number | string }> {
 
   selectedRows?: (number | string)[];
   onSelectionChange?: (selectedRows: (number | string)[]) => void;
+  onCellClick?: (id: number | string) => void;
 }
 
 export default function DataTable<
@@ -46,6 +47,7 @@ export default function DataTable<
   onSort,
   selectedRows,
   onSelectionChange,
+  onCellClick,
 }: DataTableProps<T>) {
   const [selectedRowsInternal, setSelectedRowsInternal] = useState<(number | string)[]>([]);
   const isControlled = selectedRows !== undefined;
@@ -271,7 +273,8 @@ export default function DataTable<
                   key={row.id}
                   className={`h-12 border-b border-gray-200 transition-colors ${
                     selected ? "bg-blue-50" : "hover:bg-gray-100"
-                  }`}
+                  } ${onCellClick ? "cursor-pointer" : ""}`}
+                  onClick={() => onCellClick?.(row.id)}
                 >
                   <td className="border-r border-gray-200 px-2 text-center">
                     <input

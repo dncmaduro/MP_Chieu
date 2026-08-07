@@ -1,39 +1,45 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Nguyễn Minh Anh",
       "role": "Frontend Developer",
       "avatarUrl": "/avatars/u1.png"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Trần Quốc Huy",
       "role": "Backend Developer",
       "avatarUrl": "/avatars/u2.png"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Lê Thu Hà",
       "role": "UI/UX Designer",
       "avatarUrl": "/avatars/u3.png"
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Phạm Đức Long",
       "role": "QA Engineer",
       "avatarUrl": "/avatars/u4.png"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Võ Ngọc Linh",
       "role": "Project Manager",
       "avatarUrl": null
+    },
+    {
+      "name": "test",
+      "role": "Frontend Developer",
+      "avatarUrl": null,
+      "id": "nJbWZI5Qea8"
     }
   ],
   "tasks": [
     {
-      "id": 101,
+      "id": "101",
       "title": "Thiết kế bộ lọc danh sách task",
       "description": "Thiết kế giao diện và luồng lọc task theo trạng thái, độ ưu tiên và người phụ trách.",
       "status": "done",
@@ -49,7 +55,7 @@
       "updatedAt": "2026-07-18T15:20:00+07:00"
     },
     {
-      "id": 102,
+      "id": "102",
       "title": "Implement task filters",
       "description": "Implement filtering by status, priority, assignee and combine multiple filter conditions.",
       "status": "in_progress",
@@ -65,7 +71,7 @@
       "updatedAt": "2026-07-26T14:10:00+07:00"
     },
     {
-      "id": 103,
+      "id": "103",
       "title": "Xây dựng API lấy danh sách task",
       "description": "Chuẩn hóa endpoint và query parameters phục vụ trang quản lý task.",
       "status": "done",
@@ -80,7 +86,7 @@
       "updatedAt": "2026-07-21T17:05:00+07:00"
     },
     {
-      "id": 104,
+      "id": "104",
       "title": "Kiểm thử API tạo task",
       "description": "Kiểm tra validation, dữ liệu bắt buộc và các trường hợp request không hợp lệ khi tạo task.",
       "status": "in_progress",
@@ -96,7 +102,7 @@
       "updatedAt": "2026-07-25T09:45:00+07:00"
     },
     {
-      "id": 105,
+      "id": "105",
       "title": "Review luồng quản lý task",
       "description": "Review toàn bộ luồng tạo, cập nhật, xóa và thay đổi trạng thái task trước khi demo.",
       "status": "todo",
@@ -111,7 +117,7 @@
       "updatedAt": "2026-07-13T08:45:00+07:00"
     },
     {
-      "id": 106,
+      "id": "106",
       "title": "Tạo component TaskCard",
       "description": "Xây dựng component hiển thị title, status, priority, assignee và deadline của task.",
       "status": "done",
@@ -127,7 +133,7 @@
       "updatedAt": "2026-07-18T11:30:00+07:00"
     },
     {
-      "id": 107,
+      "id": "107",
       "title": "Cập nhật responsive cho trang task",
       "description": "Đảm bảo bảng và form quản lý task sử dụng tốt trên laptop, tablet và màn hình nhỏ.",
       "status": "todo",
@@ -143,7 +149,7 @@
       "updatedAt": "2026-07-14T09:00:00+07:00"
     },
     {
-      "id": 108,
+      "id": "108",
       "title": "Thêm endpoint cập nhật task",
       "description": "Hỗ trợ PATCH để cập nhật từng trường của task và đảm bảo updatedAt được thay đổi.",
       "status": "done",
@@ -159,7 +165,7 @@
       "updatedAt": "2026-07-23T16:40:00+07:00"
     },
     {
-      "id": 109,
+      "id": "109",
       "title": "Kiểm thử thay đổi trạng thái task",
       "description": "Kiểm tra các chuyển đổi todo, in_progress và done từ giao diện và API.",
       "status": "in_progress",
@@ -175,7 +181,7 @@
       "updatedAt": "2026-07-26T10:15:00+07:00"
     },
     {
-      "id": 110,
+      "id": "110",
       "title": "Chuẩn bị dữ liệu demo",
       "description": "Chuẩn bị dữ liệu người dùng và task đủ đa dạng để kiểm tra các trạng thái và bộ lọc.",
       "status": "done",
@@ -190,7 +196,7 @@
       "updatedAt": "2026-07-24T09:10:00+07:00"
     },
     {
-      "id": 111,
+      "id": "111",
       "title": "Hiển thị avatar người phụ trách",
       "description": "Liên kết assigneeId với users để hiển thị tên và avatar của người được giao task.",
       "status": "in_progress",
@@ -206,7 +212,7 @@
       "updatedAt": "2026-07-25T13:30:00+07:00"
     },
     {
-      "id": 112,
+      "id": "112",
       "title": "Thiết kế form tạo task",
       "description": "Thiết kế form gồm tiêu đề, mô tả, trạng thái, độ ưu tiên, người phụ trách, tag và deadline.",
       "status": "done",
@@ -222,7 +228,7 @@
       "updatedAt": "2026-07-22T14:25:00+07:00"
     },
     {
-      "id": 113,
+      "id": "113",
       "title": "Validate dữ liệu trước khi submit",
       "description": "Bổ sung kiểm tra title, tags, deadline và các trường bắt buộc trước khi gửi request.",
       "status": "in_progress",
@@ -238,7 +244,7 @@
       "updatedAt": "2026-07-26T16:05:00+07:00"
     },
     {
-      "id": 114,
+      "id": "114",
       "title": "Viết test case cho task list",
       "description": "Viết test case cho hiển thị danh sách, lọc, phân trang và các trạng thái loading hoặc lỗi.",
       "status": "todo",
@@ -253,7 +259,7 @@
       "updatedAt": "2026-07-18T10:15:00+07:00"
     },
     {
-      "id": 115,
+      "id": "115",
       "title": "Tối ưu query lấy task theo assignee",
       "description": "Kiểm tra cách lọc task theo assigneeId và chuẩn hóa query để frontend dễ sử dụng.",
       "status": "todo",
@@ -269,7 +275,7 @@
       "updatedAt": "2026-07-19T11:00:00+07:00"
     },
     {
-      "id": 116,
+      "id": "116",
       "title": "Thêm trạng thái loading cho danh sách",
       "description": "Hiển thị skeleton hoặc loading indicator trong lúc React Query đang lấy dữ liệu.",
       "status": "done",
@@ -285,7 +291,7 @@
       "updatedAt": "2026-07-25T17:20:00+07:00"
     },
     {
-      "id": 117,
+      "id": "117",
       "title": "Xử lý lỗi khi API không phản hồi",
       "description": "Thiết kế trạng thái lỗi và nút thử lại khi request lấy task thất bại.",
       "status": "in_progress",
@@ -301,7 +307,7 @@
       "updatedAt": "2026-07-26T11:45:00+07:00"
     },
     {
-      "id": 118,
+      "id": "118",
       "title": "Review UX cho bộ lọc task",
       "description": "Đánh giá cách sử dụng filter, nút reset và cách hiển thị các điều kiện lọc đang áp dụng.",
       "status": "todo",
@@ -317,7 +323,7 @@
       "updatedAt": "2026-07-21T13:10:00+07:00"
     },
     {
-      "id": 119,
+      "id": "119",
       "title": "Kiểm tra phân quyền thao tác task",
       "description": "Xác minh người dùng chỉ có thể thực hiện các thao tác phù hợp với vai trò được cấp.",
       "status": "todo",
@@ -333,7 +339,7 @@
       "updatedAt": "2026-07-22T09:25:00+07:00"
     },
     {
-      "id": 120,
+      "id": "120",
       "title": "Chuẩn bị demo tính năng quản lý task",
       "description": "Tổng hợp các luồng chính và chuẩn bị dữ liệu để demo tính năng CRUD task cho team.",
       "status": "todo",
@@ -347,6 +353,18 @@
       "dueDate": "2026-08-10",
       "createdAt": "2026-07-23T15:00:00+07:00",
       "updatedAt": "2026-07-23T15:00:00+07:00"
+    },
+    {
+      "title": "abc",
+      "description": "123",
+      "status": "in_progress",
+      "priority": "high",
+      "userId": 1,
+      "dueDate": "2026-08-08",
+      "createdAt": "2026-08-07T08:38:09.430Z",
+      "updatedAt": "2026-08-07T08:38:09.430Z",
+      "id": "VMzETPIcGus"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext, useSearchParams, useNavigate } from "react-router-dom";
+import { useOutletContext, useNavigate, useSearchParams } from "react-router-dom";
 
 import { useTasks } from "../../hooks/useTasks";
 import Avatar from "../common/Avatar";
@@ -91,10 +91,12 @@ export default function TaskPage() {
     setOnClearSelection: (fn: (() => void) | null) => void;
   }>();
 
+  // State và hook xem chi tiết công việc
   const [selectedTaskId, setSelectedTaskId] = useState<number | string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { data: taskDetail, isFetching } = useTaskDetail(selectedTaskId);
 
+  // Mở drawer khi đã fetch dữ liệu thành công
   useEffect(() => {
     if (selectedTaskId && !isFetching && taskDetail) {
       const timer = setTimeout(() => {
@@ -365,6 +367,16 @@ export default function TaskPage() {
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4">
+      {/* Loading overlay khi fetch chi tiết */}
+      {isFetching && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-xs">
+          <div className="flex flex-col items-center gap-3 p-4 bg-white rounded-lg shadow-lg border border-gray-100">
+            <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm font-medium text-gray-700">Đang tải dữ liệu...</span>
+          </div>
+        </div>
+      )}
+
       <TableHeader
         searchValue={search}
         onSearch={(value) => {
@@ -382,7 +394,10 @@ export default function TaskPage() {
         onToggleFilter={() => {
           setIsFilterOpen((prev) => !prev);
         }}
-        onAdd={() => navigate("/task/new")}
+        onAdd={() => {
+          setIsFilterOpen(false);
+          navigate("/task/new");
+        }}
       />
       <div className="flex min-w-0">
         <div className="flex-1 min-w-0">
@@ -421,17 +436,12 @@ export default function TaskPage() {
           />
         )}
       </div>
-
-      {isFetching && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-xs">
-          <div className="flex flex-col items-center gap-3 rounded-lg border border-gray-100 bg-white p-4 shadow-lg">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
-            <span className="text-sm font-medium text-gray-700">Đang tải dữ liệu...</span>
-          </div>
-        </div>
-      )}
-
-      <ActionDetail open={isDrawerOpen} onClose={handleCloseDrawer} title="Chi tiết công việc">
+      {/* Drawer chi tiết công việc */}
+      <ActionDetail
+        open={isDrawerOpen}
+        onClose={handleCloseDrawer}
+        title="Chi tiết công việc"
+      >
         {taskDetail && <TaskDetail task={taskDetail} />}
       </ActionDetail>
     </div>

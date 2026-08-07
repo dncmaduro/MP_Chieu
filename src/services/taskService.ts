@@ -14,6 +14,11 @@ export const userService = {
     const response = await apiClient.get<User[]>('/users');
     return response.data;
   },
+
+  getUserById: async (id: number | string): Promise<User> => {
+    const response = await apiClient.get<User>(`/users/${id}`);
+    return response.data;
+  },
 };
 
 export const taskService = {

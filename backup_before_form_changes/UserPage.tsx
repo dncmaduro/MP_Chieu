@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext, useSearchParams, useNavigate } from "react-router-dom";
+import { useOutletContext, useNavigate, useSearchParams } from "react-router-dom";
 import type { User } from "../../types/user";
 import { useUsers } from "../../hooks/useUsers";
 import TableToolbar from "../common/TableHeader";
@@ -10,6 +10,7 @@ import FilterSidebar from "../common/filter/FilterSidebar";
 import ActionDetail from "../common/ActionDetail";
 import UserDetail from "../detail/UserDetail";
 import { useUser } from "../../hooks/useUserDetail";
+
 const USER_FILTERS = [
   {
     key: "name",
@@ -36,12 +37,13 @@ const USER_FILTERS = [
 ];
 
 export default function UserPage() {
-  const navigate = useNavigate();
   const {
     data: users = [],
     isLoading,
     isError,
   } = useUsers();
+
+  const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -56,10 +58,12 @@ export default function UserPage() {
     setOnClearSelection: (fn: (() => void) | null) => void;
   }>();
 
+  // State và hook phục vụ việc xem chi tiết người dùng
   const [selectedUserId, setSelectedUserId] = useState<number | string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { data: userDetail, isFetching } = useUser(selectedUserId);
 
+  // Mở drawer khi đã fetch dữ liệu thành công
   useEffect(() => {
     if (selectedUserId && !isFetching && userDetail) {
       const timer = setTimeout(() => {
@@ -93,7 +97,7 @@ export default function UserPage() {
     id: "",
   });
 
-  // Sync draft filters with URL when searchParams changes (reload / direct URL)
+  // update filter khi url thay đổi
   useEffect(() => {
     setDraftFilterValues({
       name: searchParams.get("name") || "",
@@ -197,6 +201,16 @@ export default function UserPage() {
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4">
+      {/* Loading overlay khi fetch chi tiết */}
+      {isFetching && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-xs">
+          <div className="flex flex-col items-center gap-3 p-4 bg-white rounded-lg shadow-lg border border-gray-100">
+            <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm font-medium text-gray-700">Đang tải dữ liệu...</span>
+          </div>
+        </div>
+      )}
+
       <TableToolbar
         searchValue={search}
         onSearch={(value) => {
@@ -214,7 +228,10 @@ export default function UserPage() {
         onToggleFilter={() => {
           setIsFilterOpen((prev) => !prev);
         }}
-        onAdd={() => navigate("/user/new")}
+        onAdd={() => {
+          setIsFilterOpen(false);
+          navigate("/user/new");
+        }}
       />
       <div className="flex min-w-0">
         <div className="flex-1 min-w-0">
@@ -253,16 +270,12 @@ export default function UserPage() {
         )}
       </div>
 
-      {isFetching && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-xs">
-          <div className="flex flex-col items-center gap-3 rounded-lg border border-gray-100 bg-white p-4 shadow-lg">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
-            <span className="text-sm font-medium text-gray-700">Đang tải dữ liệu...</span>
-          </div>
-        </div>
-      )}
-
-      <ActionDetail open={isDrawerOpen} onClose={handleCloseDrawer} title="Chi tiết người dùng">
+      {/* Drawer chi tiết người dùng */}
+      <ActionDetail
+        open={isDrawerOpen}
+        onClose={handleCloseDrawer}
+        title="Chi tiết người dùng"
+      >
         {userDetail && <UserDetail user={userDetail} />}
       </ActionDetail>
     </div>
