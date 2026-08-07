@@ -10,6 +10,8 @@ import FilterSidebar from "../common/filter/FilterSidebar";
 import ActionDetail from "../common/ActionDetail";
 import UserDetail from "../detail/UserDetail";
 import { useUser } from "../../hooks/useUserDetail";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "../../services/apiClient";
 const USER_FILTERS = [
   {
     key: "name",
@@ -51,9 +53,10 @@ export default function UserPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [selectedRows, setSelectedRows] = useState<(number | string)[]>([]);
-  const { setSelectedCount, setOnClearSelection } = useOutletContext<{
+  const { setSelectedCount, setOnClearSelection, setOnDelete } = useOutletContext<{
     setSelectedCount: (count: number) => void;
     setOnClearSelection: (fn: (() => void) | null) => void;
+    setOnDelete: (fn: (() => void) | null) => void;
   }>();
 
   const [selectedUserId, setSelectedUserId] = useState<number | string | null>(null);
@@ -78,14 +81,34 @@ export default function UserPage() {
     setSelectedUserId(null);
   };
 
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: async (ids: (number | string)[]) => {
+      await Promise.all(ids.map((id) => apiClient.delete(`/users/${id}`)));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      setSelectedRows([]);
+    },
+  });
+
+  const handleDeleteSelected = () => {
+    if (selectedRows.length === 0) return;
+    if (window.confirm(`Bạn có chắc chắn muốn xóa ${selectedRows.length} người dùng đã chọn?`)) {
+      deleteMutation.mutate(selectedRows);
+    }
+  };
+
   useEffect(() => {
     setSelectedCount(selectedRows.length);
     setOnClearSelection(() => () => setSelectedRows([]));
+    setOnDelete(() => handleDeleteSelected);
     return () => {
       setSelectedCount(0);
       setOnClearSelection(null);
+      setOnDelete(null);
     };
-  }, [selectedRows, setSelectedCount, setOnClearSelection]);
+  }, [selectedRows, setSelectedCount, setOnClearSelection, setOnDelete]);
 
   const [draftFilterValues, setDraftFilterValues] = useState<Record<string, string>>({
     name: "",
@@ -263,7 +286,15 @@ export default function UserPage() {
       )}
 
       <ActionDetail open={isDrawerOpen} onClose={handleCloseDrawer} title="Chi tiết người dùng">
-        {userDetail && <UserDetail user={userDetail} />}
+        {userDetail && (
+          <UserDetail
+            user={userDetail}
+            onEdit={() => {
+              handleCloseDrawer();
+              navigate(`/user/edit/${userDetail.id}`);
+            }}
+          />
+        )}
       </ActionDetail>
     </div>
   );

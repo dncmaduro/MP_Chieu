@@ -11,6 +11,8 @@ import FilterSidebar from "../common/filter/FilterSidebar";
 import ActionDetail from "../common/ActionDetail";
 import TaskDetail from "../detail/TaskDetail";
 import { useTaskDetail } from "../../hooks/useTaskDetail";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "../../services/apiClient";
 
 // 1. Định nghĩa danh sách cấu hình cho Filter
 const TASK_FILTERS = [
@@ -86,9 +88,10 @@ export default function TaskPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [selectedRows, setSelectedRows] = useState<(number | string)[]>([]);
-  const { setSelectedCount, setOnClearSelection } = useOutletContext<{
+  const { setSelectedCount, setOnClearSelection, setOnDelete } = useOutletContext<{
     setSelectedCount: (count: number) => void;
     setOnClearSelection: (fn: (() => void) | null) => void;
+    setOnDelete: (fn: (() => void) | null) => void;
   }>();
 
   const [selectedTaskId, setSelectedTaskId] = useState<number | string | null>(null);
@@ -113,14 +116,34 @@ export default function TaskPage() {
     setSelectedTaskId(null);
   };
 
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: async (ids: (number | string)[]) => {
+      await Promise.all(ids.map((id) => apiClient.delete(`/tasks/${id}`)));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      setSelectedRows([]);
+    },
+  });
+
+  const handleDeleteSelected = () => {
+    if (selectedRows.length === 0) return;
+    if (window.confirm(`Bạn có chắc chắn muốn xóa ${selectedRows.length} công việc đã chọn?`)) {
+      deleteMutation.mutate(selectedRows);
+    }
+  };
+
   useEffect(() => {
     setSelectedCount(selectedRows.length);
     setOnClearSelection(() => () => setSelectedRows([]));
+    setOnDelete(() => handleDeleteSelected);
     return () => {
       setSelectedCount(0);
       setOnClearSelection(null);
+      setOnDelete(null);
     };
-  }, [selectedRows, setSelectedCount, setOnClearSelection]);
+  }, [selectedRows, setSelectedCount, setOnClearSelection, setOnDelete]);
 
   const [draftFilterValues, setDraftFilterValues] = useState<Record<string, string>>({
     title: "",
@@ -432,7 +455,15 @@ export default function TaskPage() {
       )}
 
       <ActionDetail open={isDrawerOpen} onClose={handleCloseDrawer} title="Chi tiết công việc">
-        {taskDetail && <TaskDetail task={taskDetail} />}
+        {taskDetail && (
+          <TaskDetail
+            task={taskDetail}
+            onEdit={() => {
+              handleCloseDrawer();
+              navigate(`/task/edit/${taskDetail.id}`);
+            }}
+          />
+        )}
       </ActionDetail>
     </div>
   );

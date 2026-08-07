@@ -1,10 +1,13 @@
-import { useState } from "react";
-import { apiClient } from "../../services/apiClient";
+import { useState, useEffect } from "react";
 import Form from "../common/Form";
 import TextBox from "../common/TextBox";
 import ComboBox from "../common/ComboBox";
+import { useUser } from "../../hooks/useUserDetail";
+import { useUpdateUser } from "../../hooks/useUsers";
+import { apiClient } from "../../services/apiClient";
 
 interface FormUserProps {
+  userId?: number | string;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -17,7 +20,9 @@ const ROLE_OPTIONS = [
   { label: "Project Manager", value: "Project Manager" },
 ];
 
-export default function FormUser({ onSuccess, onCancel }: FormUserProps) {
+export default function FormUser({ userId, onSuccess, onCancel }: FormUserProps) {
+  const isEdit = !!userId;
+  
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -25,6 +30,21 @@ export default function FormUser({ onSuccess, onCancel }: FormUserProps) {
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
+
+  const { data: userDetail, isLoading: isLoadingUser } = useUser(userId);
+  const updateUserMutation = useUpdateUser();
+
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Sync dữ liệu cũ vào form khi ở chế độ Edit
+  useEffect(() => {
+    if (isEdit && userDetail && !isInitialized) {
+      setName(userDetail.name || "");
+      setRole(userDetail.role || "");
+      setAvatarUrl(userDetail.avatarUrl || "");
+      setIsInitialized(true);
+    }
+  }, [isEdit, userDetail, isInitialized]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -45,23 +65,56 @@ export default function FormUser({ onSuccess, onCancel }: FormUserProps) {
     }
     setGeneralError(null);
     setIsSaving(true);
+
     try {
-      await apiClient.post("/users", {
-        name: name.trim(),
-        role: role.trim(),
-        avatarUrl: avatarUrl.trim() || null,
-      });
-      onSuccess?.();
+      if (isEdit) {
+        updateUserMutation.mutate(
+          {
+            id: userId,
+            data: {
+              name: name.trim(),
+              role: role.trim(),
+              avatarUrl: avatarUrl.trim() || null,
+            },
+          },
+          {
+            onSuccess: () => {
+              setIsSaving(false);
+              onSuccess?.();
+            },
+            onError: () => {
+              setIsSaving(false);
+              setGeneralError("Có lỗi xảy ra khi cập nhật, vui lòng thử lại.");
+            },
+          }
+        );
+      } else {
+        await apiClient.post("/users", {
+          name: name.trim(),
+          role: role.trim(),
+          avatarUrl: avatarUrl.trim() || null,
+        });
+        setIsSaving(false);
+        onSuccess?.();
+      }
     } catch {
-      setGeneralError("Có lỗi xảy ra khi lưu, vui lòng thử lại.");
-    } finally {
       setIsSaving(false);
+      setGeneralError("Có lỗi xảy ra khi lưu, vui lòng thử lại.");
     }
   };
 
+  if (isEdit && isLoadingUser) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-gray-200 min-h-[300px]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+        <span className="mt-3 text-sm text-gray-500 font-medium">Đang tải thông tin người dùng...</span>
+      </div>
+    );
+  }
+
   return (
     <Form
-      title="Thêm người dùng mới"
+      title={isEdit ? "Chỉnh sửa thông tin người dùng" : "Thêm người dùng mới"}
       onSave={handleSave}
       onCancel={() => onCancel?.()}
       isSaving={isSaving}

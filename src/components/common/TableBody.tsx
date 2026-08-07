@@ -276,7 +276,10 @@ export default function DataTable<
                   } ${onCellClick ? "cursor-pointer" : ""}`}
                   onClick={() => onCellClick?.(row.id)}
                 >
-                  <td className="border-r border-gray-200 px-2 text-center">
+                  <td 
+                    className="border-r border-gray-200 px-2 text-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <input
                       type="checkbox"
                       checked={selected}

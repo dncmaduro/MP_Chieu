@@ -19,6 +19,11 @@ export const userService = {
     const response = await apiClient.get<User>(`/users/${id}`);
     return response.data;
   },
+
+  updateUser: async (id: number | string, data: Partial<Omit<User, 'id'>>): Promise<User> => {
+    const response = await apiClient.patch<User>(`/users/${id}`, data);
+    return response.data;
+  },
 };
 
 export const taskService = {

@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Form from "../common/Form";
 import TextBox from "../common/TextBox";
 import ComboBox from "../common/ComboBox";
 import Calendar from "../common/Calendar";
 import { useUsers } from "../../hooks/useUsers";
-import { useCreateTask } from "../../hooks/useTasks";
+import { useCreateTask, useUpdateTask } from "../../hooks/useTasks";
+import { useTaskDetail } from "../../hooks/useTaskDetail";
 import type { TaskStatus, TaskPriority } from "../../types/task";
 
 interface FormTaskProps {
+  taskId?: number | string;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -24,7 +26,9 @@ const PRIORITY_OPTIONS = [
   { label: "High", value: "high" },
 ];
 
-export default function FormTask({ onSuccess, onCancel }: FormTaskProps) {
+export default function FormTask({ taskId, onSuccess, onCancel }: FormTaskProps) {
+  const isEdit = !!taskId;
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<TaskStatus>("todo");
@@ -33,10 +37,28 @@ export default function FormTask({ onSuccess, onCancel }: FormTaskProps) {
   const [dueDate, setDueDate] = useState("");
 
   const { data: users = [], isLoading: isLoadingUsers } = useUsers();
+  const { data: taskDetail, isLoading: isLoadingTask } = useTaskDetail(taskId);
+
   const createTaskMutation = useCreateTask();
+  const updateTaskMutation = useUpdateTask();
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
+
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Sync dữ liệu cũ khi ở chế độ Edit
+  useEffect(() => {
+    if (isEdit && taskDetail && !isInitialized) {
+      setTitle(taskDetail.title || "");
+      setDescription(taskDetail.description || "");
+      setStatus(taskDetail.status || "todo");
+      setPriority(taskDetail.priority || "medium");
+      setUserId(taskDetail.userId ? String(taskDetail.userId) : "");
+      setDueDate(taskDetail.dueDate || "");
+      setIsInitialized(true);
+    }
+  }, [isEdit, taskDetail, isInitialized]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -63,27 +85,45 @@ export default function FormTask({ onSuccess, onCancel }: FormTaskProps) {
     }
     setGeneralError(null);
 
-    // Chuyển đổi userId sang number nếu có thể
     const parsedUserId = isNaN(Number(userId)) ? userId : Number(userId);
 
-    createTaskMutation.mutate(
-      {
-        title: title.trim(),
-        description: description.trim() || undefined,
-        status,
-        priority,
-        userId: parsedUserId,
-        dueDate: dueDate || null,
-      },
-      {
-        onSuccess: () => {
-          onSuccess?.();
+    const payload = {
+      title: title.trim(),
+      description: description.trim() || undefined,
+      status,
+      priority,
+      userId: parsedUserId,
+      dueDate: dueDate || null,
+    };
+
+    if (isEdit) {
+      updateTaskMutation.mutate(
+        {
+          id: taskId,
+          data: payload,
         },
-        onError: () => {
-          setGeneralError("Có lỗi xảy ra khi lưu công việc, vui lòng thử lại.");
-        },
-      }
-    );
+        {
+          onSuccess: () => {
+            onSuccess?.();
+          },
+          onError: () => {
+            setGeneralError("Có lỗi xảy ra khi cập nhật công việc, vui lòng thử lại.");
+          },
+        }
+      );
+    } else {
+      createTaskMutation.mutate(
+        payload,
+        {
+          onSuccess: () => {
+            onSuccess?.();
+          },
+          onError: () => {
+            setGeneralError("Có lỗi xảy ra khi lưu công việc, vui lòng thử lại.");
+          },
+        }
+      );
+    }
   };
 
   const userOptions = users.map((user) => ({
@@ -91,12 +131,21 @@ export default function FormTask({ onSuccess, onCancel }: FormTaskProps) {
     value: String(user.id),
   }));
 
+  if (isEdit && isLoadingTask) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-gray-200 min-h-[300px]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+        <span className="mt-3 text-sm text-gray-500 font-medium">Đang tải thông tin công việc...</span>
+      </div>
+    );
+  }
+
   return (
     <Form
-      title="Thêm công việc mới"
+      title={isEdit ? "Chỉnh sửa công việc" : "Thêm công việc mới"}
       onSave={handleSave}
       onCancel={() => onCancel?.()}
-      isSaving={createTaskMutation.isPending}
+      isSaving={createTaskMutation.isPending || updateTaskMutation.isPending}
     >
       {generalError && (
         <div className="rounded-md bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-700">
