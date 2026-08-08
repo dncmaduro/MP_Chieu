@@ -88,18 +88,30 @@ export default function FormUser({ userId, onSuccess, onCancel }: FormUserProps)
           }
         );
       } else {
-        // createUserMutation.mutate({
+        createUserMutation.mutate(
+          {
+            name: name.trim(),
+            role: role.trim(),
+            avatarUrl: avatarUrl.trim() || null,
+          },
+          {
+            onSuccess: () => {
+              setIsSaving(false);
+              onSuccess?.();
+            },
+            onError: () => {
+              setIsSaving(false);
+              setGeneralError("Có lỗi xảy ra khi thêm người dùng, vui lòng thử lại.");
+            },
+          }
+        );
+        // await apiClient.post("/users", {
         //   name: name.trim(),
         //   role: role.trim(),
-        //   avatarUrl: avatarUrl.trim(),
+        //   avatarUrl: avatarUrl.trim() || null,
         // });
-        await apiClient.post("/users", {
-          name: name.trim(),
-          role: role.trim(),
-          avatarUrl: avatarUrl.trim() || null,
-        });
-        setIsSaving(false);
-        onSuccess?.();
+        // setIsSaving(false);
+        // onSuccess?.();
       }
     } catch {
       setIsSaving(false);
