@@ -1,12 +1,13 @@
 import type { FilterConfig } from "../../../types/filter";
 import FilterField from "./FilterField";
-
+import { useIsMobile } from "../../../hooks/useIsMobile";
 interface FilterSidebarProps {
   filters: FilterConfig[];
   values: Record<string, string>;
   onChange: (key: string, value: string) => void;
   onReset: () => void;
   onApply: () => void;
+  onClose?: () => void;
 }
 
 export default function FilterSidebar({
@@ -15,7 +16,9 @@ export default function FilterSidebar({
   onChange,
   onReset,
   onApply,
+  onClose,
 }: FilterSidebarProps) {
+  const isMobile = useIsMobile();
   return (
     <div className="sticky top-4 flex h-[calc(70vh-2rem)] w-80 shrink-0 flex-col border border-gray-200 rounded-lg bg-white shadow-sm ml-4">
       {/* Vùng các ô lọc (có scrollbar khi quá dài) */}
@@ -42,7 +45,13 @@ export default function FilterSidebar({
       {/* Vùng nút Lọc cố định ở bottom */}
       <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-lg">
         <button
-          onClick={onApply}
+        onClick={() => {
+          onApply();
+
+          if (isMobile) {
+            onClose?.();
+          }
+        }}
           className="w-full rounded-md bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow hover:bg-blue-700 transition"
         >
           Lọc

@@ -1,3 +1,4 @@
+import { useIsMobile } from "../../hooks/useIsMobile";
 interface PaginationProps {
   total: number;
   pageSize: number;
@@ -11,6 +12,7 @@ export default function TablePagination({
   onChange,
 }: PaginationProps) {
   const totalPages = Math.ceil(total / pageSize);
+    const isMobile = useIsMobile();
   return (
     <div
       className="
@@ -32,25 +34,31 @@ export default function TablePagination({
         </span>
       </div>
       <div className="flex items-center gap-4">
-        <div>
-          Số dòng/trang: 
-          <span className="font-medium ml-1">
-            {pageSize}
-          </span>
-        </div>
-        {/* Range */}
-        <div>
-          {(current - 1) * pageSize + 1}
-          -
-          {Math.min(
-            current * pageSize,
-            total
-          )}
-        </div>
-        {/* Page number */}
-        <div>
-          Trang {current}/{totalPages}
-        </div>
+        {!isMobile && (
+          <>
+            <div>
+              Số dòng/trang:
+              <span className="ml-1 font-medium">
+                {pageSize}
+              </span>
+            </div>
+
+            {/* Range */}
+            <div>
+              {(current - 1) * pageSize + 1}
+              -
+              {Math.min(
+                current * pageSize,
+                total
+              )}
+            </div>
+
+            {/* Page number */}
+            <div>
+              Trang {current}/{totalPages}
+            </div>
+          </>
+        )}
         <div className="flex gap-2">
           {/* Previous */}
           <button

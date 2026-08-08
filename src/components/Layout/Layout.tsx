@@ -37,7 +37,7 @@ export default function Layout() {
               onDelete={handleDelete}
             />
           )}
-          <div className="flex-1 overflow-auto p-6">
+          <div className="flex-1 overflow-auto p-">
             <Outlet context={{ setSelectedCount, setOnClearSelection, setOnDelete }} />
           </div>
         </main>

@@ -47,12 +47,6 @@
       "role": "Frontend Developer",
       "avatarUrl": "",
       "id": "Lc8N0Hlo-1o"
-    },
-    {
-      "name": "test 4",
-      "role": "UI/UX Designer",
-      "avatarUrl": "ádf",
-      "id": "qHh3SIjUZiE"
     }
   ],
   "tasks": [
@@ -60,8 +54,8 @@
       "id": "101",
       "title": "Thiết kế bộ lọc danh sách task 1234",
       "description": "Thiết kế giao diện và luồng lọc task theo trạng thái, độ ưu tiên và người phụ trách.",
-      "status": "done",
-      "priority": "high",
+      "status": "in_progress",
+      "priority": "low",
       "userId": 3,
       "tags": [
         "ui",
@@ -70,7 +64,7 @@
       ],
       "dueDate": "2026-07-20",
       "createdAt": "2026-07-10T08:30:00+07:00",
-      "updatedAt": "2026-08-07T08:55:55.813Z"
+      "updatedAt": "2026-08-08T08:04:55.421Z"
     },
     {
       "id": "102",
@@ -121,7 +115,7 @@
     },
     {
       "id": "105",
-      "title": "Review luồng quản lý task",
+      "title": "Review luồng quản lý task111",
       "description": "Review toàn bộ luồng tạo, cập nhật, xóa và thay đổi trạng thái task trước khi demo.",
       "status": "todo",
       "priority": "medium",
@@ -132,7 +126,7 @@
       ],
       "dueDate": "2026-08-03",
       "createdAt": "2026-07-13T08:45:00+07:00",
-      "updatedAt": "2026-07-13T08:45:00+07:00"
+      "updatedAt": "2026-08-08T08:15:52.118Z"
     },
     {
       "id": "106",
@@ -339,22 +333,6 @@
       "dueDate": "2026-08-06",
       "createdAt": "2026-07-21T13:10:00+07:00",
       "updatedAt": "2026-07-21T13:10:00+07:00"
-    },
-    {
-      "id": "119",
-      "title": "Kiểm tra phân quyền thao tác task",
-      "description": "Xác minh người dùng chỉ có thể thực hiện các thao tác phù hợp với vai trò được cấp.",
-      "status": "todo",
-      "priority": "high",
-      "userId": 4,
-      "tags": [
-        "qa",
-        "permission",
-        "security"
-      ],
-      "dueDate": "2026-08-09",
-      "createdAt": "2026-07-22T09:25:00+07:00",
-      "updatedAt": "2026-07-22T09:25:00+07:00"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

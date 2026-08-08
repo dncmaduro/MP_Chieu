@@ -4,7 +4,6 @@ import TextBox from "../common/TextBox";
 import ComboBox from "../common/ComboBox";
 import { useUser } from "../../hooks/useUserDetail";
 import { useUpdateUser } from "../../hooks/useUsers";
-import { apiClient } from "../../services/apiClient";
 import { useCreateUser } from "../../hooks/useUsers";
 interface FormUserProps {
   userId?: number | string;
