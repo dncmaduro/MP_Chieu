@@ -4,6 +4,7 @@ import SearchIcon from "../../assets/svg/ic_search";
 interface TableToolbarProps {
   onSearch?: (value: string) => void;
   onToggleFilter?: () => void;
+  onAdd?: () => void;
   children?: ReactNode;
   searchValue?: string;
 }
@@ -11,6 +12,7 @@ interface TableToolbarProps {
 export default function TableToolbar({
   onSearch,
   onToggleFilter,
+  onAdd,
   children,
   searchValue = "",
 }: TableToolbarProps) {
@@ -51,13 +53,31 @@ export default function TableToolbar({
         </div>
         {children}
       </div>
-      {/* Filter button */}
-      <button
-        onClick={onToggleFilter}
-        className="w-8 h-8 border rounded-md flex items-center justify-center hover:bg-gray-100"
-      >
-        <img src={ic_filter} alt="filter" className="w-4 h-4" />
-      </button>
+      <div className="flex gap-2 items-center">
+        {/* Filter button */}
+        {onToggleFilter && (
+          <button
+            onClick={onToggleFilter}
+            className="w-8 h-8 border rounded-md flex items-center justify-center hover:bg-gray-100"
+            title="Lọc"
+          >
+            <img src={ic_filter} alt="filter" className="w-4 h-4" />
+          </button>
+        )}
+        {/* Add button */}
+        {onAdd && (
+          <button
+            onClick={onAdd}
+            className="h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-md px-3 flex items-center justify-center text-sm font-medium gap-1 transition"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Thêm mới
+          </button>
+        )}
+      </div>
     </div>
   );
 }
+

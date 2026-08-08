@@ -32,6 +32,7 @@ interface DataTableProps<T extends { id: number | string }> {
 
   selectedRows?: (number | string)[];
   onSelectionChange?: (selectedRows: (number | string)[]) => void;
+  onCellClick?: (id: number | string) => void;
 }
 
 export default function DataTable<
@@ -46,6 +47,7 @@ export default function DataTable<
   onSort,
   selectedRows,
   onSelectionChange,
+  onCellClick,
 }: DataTableProps<T>) {
   const [selectedRowsInternal, setSelectedRowsInternal] = useState<(number | string)[]>([]);
   const isControlled = selectedRows !== undefined;
@@ -168,7 +170,7 @@ export default function DataTable<
 
   return (
     <div className="relative w-full max-w-full overflow-hidden rounded-lg border border-gray-200 bg-white">
-      {/* Loading overlay — rendered on top of the entire table */}
+      {/* Loading overlay  */}
       {isLoading && <TableLoading />}
       <div className="table-scroll max-w-full overflow-x-auto">
         <table className="table-fixed border-collapse text-sm" style={{ minWidth: `${totalWidth}px`, width: "100%" }}>
@@ -271,9 +273,13 @@ export default function DataTable<
                   key={row.id}
                   className={`h-12 border-b border-gray-200 transition-colors ${
                     selected ? "bg-blue-50" : "hover:bg-gray-100"
-                  }`}
+                  } ${onCellClick ? "cursor-pointer" : ""}`}
+                  onClick={() => onCellClick?.(row.id)}
                 >
-                  <td className="border-r border-gray-200 px-2 text-center">
+                  <td 
+                    className="border-r border-gray-200 px-2 text-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <input
                       type="checkbox"
                       checked={selected}

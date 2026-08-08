@@ -9,14 +9,13 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Cấu hình khóa scroll toàn trang */
 html,
 body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Chống kéo scroll cả dọc lẫn ngang */
+  overflow: hidden; 
   background-color: var(--bg-light);
 }
 
@@ -318,11 +317,10 @@ body {
   opacity: 0.6;
 }
 
-/* Area trống cho nội dung */
 .content-placeholder {
   flex: 1;
   background-color: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  overflow: auto; /* Dành cho việc hiển thị bảng dữ liệu lớn sau này */
+  overflow: auto; 
 }

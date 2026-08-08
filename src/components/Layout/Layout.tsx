@@ -7,6 +7,7 @@ import ActionBar from "./ActionBar";
 export default function Layout() {
   const [selectedCount, setSelectedCount] = useState(0);
   const [onClearSelection, setOnClearSelection] = useState<(() => void) | null>(null);
+  const [onDelete, setOnDelete] = useState<(() => void) | null>(null);
 
   const location = useLocation();
   const activeTab = location.pathname.includes('task') ? 'task' : 'user';
@@ -14,6 +15,12 @@ export default function Layout() {
   const handleClearSelection = () => {
     if (onClearSelection) {
       onClearSelection();
+    }
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete();
     }
   };
 
@@ -27,10 +34,11 @@ export default function Layout() {
             <ActionBar
               selectedCount={selectedCount}
               onClearSelection={handleClearSelection}
+              onDelete={handleDelete}
             />
           )}
           <div className="flex-1 overflow-auto p-6">
-            <Outlet context={{ setSelectedCount, setOnClearSelection }} />
+            <Outlet context={{ setSelectedCount, setOnClearSelection, setOnDelete }} />
           </div>
         </main>
       </div>

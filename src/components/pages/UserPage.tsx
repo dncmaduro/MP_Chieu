@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { useOutletContext, useSearchParams, useNavigate } from "react-router-dom";
 import type { User } from "../../types/user";
 import { useUsers } from "../../hooks/useUsers";
 import TableToolbar from "../common/TableHeader";
@@ -7,7 +7,11 @@ import DataTable, { type Column } from "../common/TableBody";
 import TablePagination from "../common/TableFooter";
 import Avatar from "../common/Avatar";
 import FilterSidebar from "../common/filter/FilterSidebar";
-
+import ActionDetail from "../common/ActionDetail";
+import UserDetail from "../detail/UserDetail";
+import { useUser } from "../../hooks/useUserDetail";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "../../services/apiClient";
 const USER_FILTERS = [
   {
     key: "name",
@@ -34,6 +38,7 @@ const USER_FILTERS = [
 ];
 
 export default function UserPage() {
+  const navigate = useNavigate();
   const {
     data: users = [],
     isLoading,
@@ -48,19 +53,62 @@ export default function UserPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [selectedRows, setSelectedRows] = useState<(number | string)[]>([]);
-  const { setSelectedCount, setOnClearSelection } = useOutletContext<{
+  const { setSelectedCount, setOnClearSelection, setOnDelete } = useOutletContext<{
     setSelectedCount: (count: number) => void;
     setOnClearSelection: (fn: (() => void) | null) => void;
+    setOnDelete: (fn: (() => void) | null) => void;
   }>();
+
+  const [selectedUserId, setSelectedUserId] = useState<number | string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { data: userDetail, isFetching } = useUser(selectedUserId);
+
+  useEffect(() => {
+    if (selectedUserId && !isFetching && userDetail) {
+      const timer = setTimeout(() => {
+        setIsDrawerOpen(true);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedUserId, isFetching, userDetail]);
+
+  const handleCellClick = (id: number | string) => {
+    setSelectedUserId(id);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+    setSelectedUserId(null);
+  };
+
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: async (ids: (number | string)[]) => {
+      await Promise.all(ids.map((id) => apiClient.delete(`/users/${id}`)));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      setSelectedRows([]);
+    },
+  });
+
+  const handleDeleteSelected = () => {
+    if (selectedRows.length === 0) return;
+    if (window.confirm(`Bạn có chắc chắn muốn xóa ${selectedRows.length} người dùng đã chọn?`)) {
+      deleteMutation.mutate(selectedRows);
+    }
+  };
 
   useEffect(() => {
     setSelectedCount(selectedRows.length);
     setOnClearSelection(() => () => setSelectedRows([]));
+    setOnDelete(() => handleDeleteSelected);
     return () => {
       setSelectedCount(0);
       setOnClearSelection(null);
+      setOnDelete(null);
     };
-  }, [selectedRows, setSelectedCount, setOnClearSelection]);
+  }, [selectedRows, setSelectedCount, setOnClearSelection, setOnDelete]);
 
   const [draftFilterValues, setDraftFilterValues] = useState<Record<string, string>>({
     name: "",
@@ -189,6 +237,7 @@ export default function UserPage() {
         onToggleFilter={() => {
           setIsFilterOpen((prev) => !prev);
         }}
+        onAdd={() => navigate("/user/new")}
       />
       <div className="flex min-w-0">
         <div className="flex-1 min-w-0">
@@ -200,6 +249,7 @@ export default function UserPage() {
               isError={isError}
               selectedRows={selectedRows}
               onSelectionChange={setSelectedRows}
+              onCellClick={handleCellClick}
             />
           </div>
           <TablePagination
@@ -225,6 +275,27 @@ export default function UserPage() {
           />
         )}
       </div>
+
+      {isFetching && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-xs">
+          <div className="flex flex-col items-center gap-3 rounded-lg border border-gray-100 bg-white p-4 shadow-lg">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+            <span className="text-sm font-medium text-gray-700">Đang tải dữ liệu...</span>
+          </div>
+        </div>
+      )}
+
+      <ActionDetail open={isDrawerOpen} onClose={handleCloseDrawer} title="Chi tiết người dùng">
+        {userDetail && (
+          <UserDetail
+            user={userDetail}
+            onEdit={() => {
+              handleCloseDrawer();
+              navigate(`/user/edit/${userDetail.id}`);
+            }}
+          />
+        )}
+      </ActionDetail>
     </div>
   );
 }

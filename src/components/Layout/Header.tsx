@@ -1,7 +1,6 @@
 import SearchIcon from "../../assets/svg/ic_search";
 import UserIcon from "../../assets/svg/ic_user";
-import TaskIcon from "../../assets/svg/uc_task";
-const ICON_PLACEHOLDER = "https://via.placeholder.com/20";
+
 
 export default function Header() {
   return (
