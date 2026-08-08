@@ -5,7 +5,7 @@ import ComboBox from "../common/ComboBox";
 import { useUser } from "../../hooks/useUserDetail";
 import { useUpdateUser } from "../../hooks/useUsers";
 import { apiClient } from "../../services/apiClient";
-
+import { useCreateUser } from "../../hooks/useUsers";
 interface FormUserProps {
   userId?: number | string;
   onSuccess?: () => void;
@@ -33,10 +33,9 @@ export default function FormUser({ userId, onSuccess, onCancel }: FormUserProps)
 
   const { data: userDetail, isLoading: isLoadingUser } = useUser(userId);
   const updateUserMutation = useUpdateUser();
-
+  const createUserMutation = useCreateUser();
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Sync dữ liệu cũ vào form khi ở chế độ Edit
   useEffect(() => {
     if (isEdit && userDetail && !isInitialized) {
       setName(userDetail.name || "");
@@ -74,7 +73,7 @@ export default function FormUser({ userId, onSuccess, onCancel }: FormUserProps)
             data: {
               name: name.trim(),
               role: role.trim(),
-              avatarUrl: avatarUrl.trim() || null,
+              avatarUrl: avatarUrl.trim(),
             },
           },
           {
@@ -89,6 +88,11 @@ export default function FormUser({ userId, onSuccess, onCancel }: FormUserProps)
           }
         );
       } else {
+        // createUserMutation.mutate({
+        //   name: name.trim(),
+        //   role: role.trim(),
+        //   avatarUrl: avatarUrl.trim(),
+        // });
         await apiClient.post("/users", {
           name: name.trim(),
           role: role.trim(),
@@ -111,7 +115,6 @@ export default function FormUser({ userId, onSuccess, onCancel }: FormUserProps)
       </div>
     );
   }
-
   return (
     <Form
       title={isEdit ? "Chỉnh sửa thông tin người dùng" : "Thêm người dùng mới"}

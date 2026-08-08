@@ -170,7 +170,7 @@ export default function DataTable<
 
   return (
     <div className="relative w-full max-w-full overflow-hidden rounded-lg border border-gray-200 bg-white">
-      {/* Loading overlay — rendered on top of the entire table */}
+      {/* Loading overlay  */}
       {isLoading && <TableLoading />}
       <div className="table-scroll max-w-full overflow-x-auto">
         <table className="table-fixed border-collapse text-sm" style={{ minWidth: `${totalWidth}px`, width: "100%" }}>

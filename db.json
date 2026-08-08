@@ -29,6 +29,12 @@
       "name": "Võ Ngọc Linh",
       "role": "Project Manager",
       "avatarUrl": null
+    },
+    {
+      "name": "test",
+      "role": "Frontend Developer",
+      "avatarUrl": null,
+      "id": "dlPXcjp6sHs"
     }
   ],
   "tasks": [

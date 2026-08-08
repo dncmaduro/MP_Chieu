@@ -47,7 +47,6 @@ export default function FormTask({ taskId, onSuccess, onCancel }: FormTaskProps)
 
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Sync dữ liệu cũ khi ở chế độ Edit
   useEffect(() => {
     if (isEdit && taskDetail && !isInitialized) {
       setTitle(taskDetail.title || "");
@@ -89,11 +88,11 @@ export default function FormTask({ taskId, onSuccess, onCancel }: FormTaskProps)
 
     const payload = {
       title: title.trim(),
-      description: description.trim() || undefined,
+      description: description.trim(),
       status,
       priority,
       userId: parsedUserId,
-      dueDate: dueDate || null,
+      dueDate: dueDate,
     };
 
     if (isEdit) {

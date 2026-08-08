@@ -1,5 +1,5 @@
 import type { TaskWithUser } from "../../types/task";
-
+import { InfoCard1,InfoCard2 } from "../common/InfoCard";
 interface TaskDetailProps {
   task: TaskWithUser;
   onEdit?: () => void;
@@ -45,33 +45,26 @@ export default function TaskDetail({ task, onEdit }: TaskDetailProps) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs">
-          <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Trạng thái</div>
-          <div className="mt-2">
-            <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full border ${getStatusBadgeClass(task.status)}`}>
-              {task.status.toUpperCase().replace("_", " ")}
-            </span>
-          </div>
-        </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs">
-          <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Độ ưu tiên</div>
-          <div className="mt-2">
-            <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full border ${getPriorityBadgeClass(task.priority)}`}>
-              {task.priority.toUpperCase()}
-            </span>
-          </div>
-        </div>
+        <InfoCard2
+          label="Trạng thái"
+          color={getStatusBadgeClass(task.status)}
+          value={task.status}
+        />
+        <InfoCard2
+          label="Độ ưu tiên"
+          color={getPriorityBadgeClass(task.priority)}
+          value={task.priority}
+        />
       </div>
-
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs">
-          <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Người phụ trách</div>
-          <div className="mt-2 text-sm font-semibold text-gray-800">{task.user?.name ?? "Chưa phân công"}</div>
-        </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs">
-          <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Hạn chót</div>
-          <div className="mt-2 text-sm font-semibold text-gray-800">{task.dueDate ?? "—"}</div>
-        </div>
+        <InfoCard1
+          label="Người phụ trách"
+          value={task.user?.name ?? "Chưa phân công"}
+        />
+        <InfoCard1
+          label="Hạn chót"
+          value={task.dueDate ?? "—"}
+        />
       </div>
 
       {onEdit && (
