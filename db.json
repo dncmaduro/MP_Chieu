@@ -51,22 +51,6 @@
   ],
   "tasks": [
     {
-      "id": "101",
-      "title": "Thiết kế bộ lọc danh sách task 1234",
-      "description": "Thiết kế giao diện và luồng lọc task theo trạng thái, độ ưu tiên và người phụ trách.",
-      "status": "in_progress",
-      "priority": "low",
-      "userId": 3,
-      "tags": [
-        "ui",
-        "filter",
-        "task"
-      ],
-      "dueDate": "2026-07-20",
-      "createdAt": "2026-07-10T08:30:00+07:00",
-      "updatedAt": "2026-08-08T08:04:55.421Z"
-    },
-    {
       "id": "102",
       "title": "Implement task filters",
       "description": "Implement filtering by status, priority, assignee and combine multiple filter conditions.",
@@ -319,20 +303,15 @@
       "updatedAt": "2026-07-26T11:45:00+07:00"
     },
     {
-      "id": "118",
-      "title": "Review UX cho bộ lọc task",
-      "description": "Đánh giá cách sử dụng filter, nút reset và cách hiển thị các điều kiện lọc đang áp dụng.",
+      "title": "Thiết kế bộ lọc danh sách task 12345678",
+      "description": "",
       "status": "todo",
       "priority": "medium",
-      "userId": 3,
-      "tags": [
-        "ux",
-        "filter",
-        "review"
-      ],
-      "dueDate": "2026-08-06",
-      "createdAt": "2026-07-21T13:10:00+07:00",
-      "updatedAt": "2026-07-21T13:10:00+07:00"
+      "userId": null,
+      "dueDate": "",
+      "createdAt": "2026-08-10T09:13:11.700Z",
+      "updatedAt": "2026-08-10T09:13:11.700Z",
+      "id": "p84s06nZqSI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
