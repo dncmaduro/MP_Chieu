@@ -1,5 +1,5 @@
 import type { User } from "../../types/user";
-
+import Avatar from "../common/Avatar";
 interface UserDetailProps {
   user: User;
   onEdit?: () => void;
@@ -12,13 +12,11 @@ export default function UserDetail({ user, onEdit }: UserDetailProps) {
       {/* Profile Header */}
       <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-xl border border-gray-150 shadow-xs">
         <div className="w-24 h-24 mb-4 rounded-full ring-4 ring-blue-100 overflow-hidden flex items-center justify-center bg-gray-250 shadow-inner">
-          {user.avatarUrl ? (
-            <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-3xl font-bold text-blue-600">
-              {user.name.charAt(0).toUpperCase()}
-            </span>
-          )}
+          <Avatar
+            name={user.name}
+            avatarUrl={user.avatarUrl}
+            size={86}
+          />
         </div>
         <h3 className="text-xl font-bold text-gray-800">{user.name}</h3>
         <span className="mt-2 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-100">

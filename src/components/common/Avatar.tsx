@@ -1,9 +1,16 @@
 import { useState } from "react";
+
 interface AvatarProps {
   name: string;
   avatarUrl?: string | null;
+  size?: number;
 }
-export default function Avatar({ name, avatarUrl }: AvatarProps) {
+
+export default function Avatar({
+  name,
+  avatarUrl,
+  size = 32,
+}: AvatarProps) {
   const [hasError, setHasError] = useState(false);
 
   const getInitials = (fullName: string) => {
@@ -25,14 +32,26 @@ export default function Avatar({ name, avatarUrl }: AvatarProps) {
         src={avatarUrl}
         alt={name}
         onError={() => setHasError(true)}
-        className="h-8 w-8 rounded-full object-cover"
+        className="rounded-full object-cover"
+        style={{
+          width: size,
+          height: size,
+        }}
       />
     );
   }
 
   return (
-    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-xs font-semibold text-white">
+    <div
+      className="flex items-center justify-center rounded-full bg-blue-500 font-semibold text-white"
+      style={{
+        width: size,
+        height: size,
+        fontSize: size * 0.4,
+      }}
+    >
       {getInitials(name)}
     </div>
   );
 }
+

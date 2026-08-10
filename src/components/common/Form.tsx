@@ -15,7 +15,6 @@ export default function Form({ title, onSave, onCancel, isSaving, children }: Fo
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-            <p className="text-sm text-gray-500">Điền thông tin bên dưới để tạo mới</p>
           </div>
           <button
             type="button"

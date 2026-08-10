@@ -1,75 +1,99 @@
-# React + TypeScript + Vite
+# React Query + JSON Server Mock Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Một mock project sử dụng **React + TypeScript + React Query + JSON Server** để thực hành xây dựng giao diện quản lý dữ liệu và xử lý API phía frontend.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* React
+* TypeScript
+* Vite
+* TanStack React Query
+* Axios
+* React Router
+* Tailwind CSS
+* JSON Server
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Project tập trung vào các chức năng và kỹ thuật frontend cơ bản:
 
-## Expanding the ESLint configuration
+* Hiển thị danh sách dữ liệu
+* CRUD cơ bản
+  * Create
+  * Read
+  * Update
+  * Delete
+* Pagination
+* Sorting
+* Search
+* Filter
+* Các chức năng khác
+  * URL Parameters
+  * Loading state
+  * Error handling
+  * React Query caching
+  * Query invalidation
+  * Optimistic update
+  * Rollback khi mutation thất bại
+  * React Query Devtools
+  * Responsive UI cơ bản
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Architecture
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Luồng xử lý dữ liệu chính:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+React Component
+      ↓
+Custom Hook
+      ↓
+TanStack React Query
+      ↓
+Service / Axios
+      ↓
+JSON Server
+      ↓
+db.json
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 
-```
+React Query chịu trách nhiệm quản lý server state, cache, refetch và mutation.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+JSON Server được sử dụng làm mock API trong quá trình phát triển.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Run Project
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Install dependencies
 
-```
+npm install
+
+### 2. Start JSON Server
+
+Mở terminal thứ nhất:
+
+npx json-server db.json
+
+JSON Server mặc định chạy tại:
+
+http://localhost:3000
+
+### 3. Start React application
+
+Mở terminal thứ hai:
+npm run dev
+Frontend mặc định chạy tại:
+http://localhost:5173
+hoặc port tương ứng do terminal trả về
+
+## Development
+
+Project sử dụng `db.json` làm dữ liệu mock.
+
+Frontend gọi API thông qua Axios và quản lý dữ liệu server bằng TanStack React Query.
+
+## Limitations
+JSON Server chỉ được sử dụng làm mock API nên không phản ánh đầy đủ backend production.
+Không hỗ trợ upload và lưu trữ file thực tế; ví dụ avatar/image chỉ có thể sử dụng URL có sẵn.
+Móc nối dữ liệu bằng front end do json server không hỗ trợ relationship
+
+## Project Purpose
+
+Đây là **mock project**, mục đích chính là thực hành React Query và các kỹ thuật xử lý dữ liệu thường gặp trong ứng dụng web thực tế, thay vì xây dựng một sản phẩm production hoàn chỉnh.

@@ -49,15 +49,12 @@ export const taskService = {
     if (params?.title) {
       queryParams['title:contains'] = params.title;
     }
-
     if (params?._sort) {
       queryParams._sort = params._sort;
     }
-
     if (params?._page) {
       queryParams._page = params._page;
     }
-
     if (params?._per_page) {
       queryParams._per_page = params._per_page;
     }

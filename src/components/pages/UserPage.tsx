@@ -272,18 +272,12 @@ export default function UserPage() {
             onChange={handleFilterChange}
             onReset={handleResetFilter}
             onApply={handleApplyFilter}
+            onClose={() => setIsFilterOpen(false)}
           />
         )}
       </div>
 
-      {isFetching && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-xs">
-          <div className="flex flex-col items-center gap-3 rounded-lg border border-gray-100 bg-white p-4 shadow-lg">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
-            <span className="text-sm font-medium text-gray-700">Đang tải dữ liệu...</span>
-          </div>
-        </div>
-      )}
+      
 
       <ActionDetail open={isDrawerOpen} onClose={handleCloseDrawer} title="Chi tiết người dùng">
         {userDetail && (
